@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useRouter } from "next/navigation";
@@ -7,15 +8,21 @@ import { useApp } from "@/components/providers";
 export default function RegisterPage() {
   const { setUser, user } = useApp();
   const router = useRouter();
+
   const [fullName, setFullName] = useState(user?.fullName || "");
   const [address, setAddress] = useState(user?.address || "");
   const [geo, setGeo] = useState(user?.geo || null);
-  const [file, setFile] = useState<File | null>(null);
   const [status, setStatus] = useState("");
   const [loading, setLoading] = useState(false);
 
-  async function captureGps() {
+  function captureGps() {
+    if (!navigator.geolocation) {
+      setStatus("المتصفح لا يدعم تحديد الموقع. يمكنك المتابعة بكتابة العنوان.");
+      return;
+    }
+
     setStatus("جاري تحديد موقعك...");
+
     navigator.geolocation.getCurrentPosition(
       (pos) => {
         setGeo({
@@ -23,100 +30,101 @@ export default function RegisterPage() {
           lng: pos.coords.longitude,
           accuracy: pos.coords.accuracy,
         });
-        setStatus("تم التقاط إحداثيات GPS بنجاح.");
+        setStatus("تم تحديد الموقع بنجاح.");
       },
-      () => setStatus("تعذر الوصول للموقع. اسمح للمتصفح بالـ GPS."),
+      () => {
+        setStatus("تعذر تحديد الموقع. يمكنك المتابعة بكتابة العنوان.");
+      },
       { enableHighAccuracy: true, timeout: 12000 },
     );
   }
 
-  async function submit(e: React.FormEvent) {
+  function submit(e: React.FormEvent) {
     e.preventDefault();
-    if (!file) return setStatus("ارفع صورة البطاقة الشخصية.");
+
+    const name = fullName.trim();
+    const deliveryAddress = address.trim();
+
+    if (!name || !deliveryAddress) {
+      setStatus("اكتب الاسم والعنوان بالتفصيل للمتابعة.");
+      return;
+    }
+
     setLoading(true);
-    setStatus("الذكاء الاصطناعي يتحقق من العنوان والبطاقة...");
+    setStatus("");
+
     try {
-      const addrRes = await fetch("/api/ai/verify-address", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ address, geo }),
-      });
-      const addr = await addrRes.json();
-      if (!addr.ok) {
-        setStatus(addr.message);
-        setLoading(false);
-        return;
-      }
-      const fd = new FormData();
-      fd.append("idImage", file);
-      const idRes = await fetch("/api/ai/verify-id", { method: "POST", body: fd });
-      const id = await idRes.json();
-      if (!id.ok) {
-        setStatus(id.message);
-        setLoading(false);
-        return;
-      }
       setUser({
-        fullName,
-        address,
-        geo: geo!,
-        verified: true,
-        verifiedAt: new Date().toISOString(),
+        fullName: name,
+        address: deliveryAddress,
+        geo: geo || undefined,
+        verified: false,
+        verifiedAt: undefined,
       });
+
       router.push("/");
     } catch {
-      setStatus("حدث خطأ أثناء التحقق. حاول مجدداً.");
-    } finally {
+      setStatus("تعذر إكمال التسجيل. حاول مرة أخرى.");
       setLoading(false);
     }
   }
 
   return (
     <div className="mx-auto max-w-xl">
-      <h1 className="font-display text-4xl">التسجيل والتحقق الذكي</h1>
+      <h1 className="font-display text-4xl">التسجيل</h1>
+
       <p className="mt-2 text-sm text-[#7a6554]">
-        لا يمكن تصفح القائمة قبل إكمال الاسم، العنوان الجغرافي، وصورة البطاقة.
+        اكتب اسمك وعنوان التوصيل للبدء. تحديد الموقع اختياري،
+        ولا تحتاج إلى رفع صورة بطاقة لتصفح قائمة الطعام.
       </p>
+
       <form onSubmit={submit} className="card mt-6 space-y-4 p-6">
         <label className="block text-sm">
           الاسم بالكامل
           <input
             required
+            maxLength={120}
             className="mt-1 w-full rounded-2xl border border-[#e8d5b8] bg-white px-4 py-3"
             value={fullName}
             onChange={(e) => setFullName(e.target.value)}
           />
         </label>
+
         <label className="block text-sm">
           العنوان بالتفصيل (شارع، حي، مبنى، علامة مميزة)
           <textarea
             required
+            maxLength={500}
             rows={3}
             className="mt-1 w-full rounded-2xl border border-[#e8d5b8] bg-white px-4 py-3"
             value={address}
             onChange={(e) => setAddress(e.target.value)}
           />
         </label>
-        <button type="button" className="btn-ghost" onClick={captureGps}>
-          التقاط الموقع عبر GPS
+
+        <button
+          type="button"
+          className="btn-ghost"
+          onClick={captureGps}
+        >
+          تحديد الموقع عبر GPS (اختياري)
         </button>
+
         {geo ? (
           <p className="text-xs text-[#7a6554]">
-            {geo.lat.toFixed(5)}, {geo.lng.toFixed(5)} — دقة {Math.round(geo.accuracy || 0)}م
+            تم تحديد الموقع بدقة تقارب{" "}
+            {Math.round(geo.accuracy || 0)} متر.
           </p>
         ) : null}
-        <label className="block text-sm">
-          صورة الهوية الشخصية
-          <input
-            type="file"
-            accept="image/*"
-            className="mt-1 w-full text-sm"
-            onChange={(e) => setFile(e.target.files?.[0] || null)}
-          />
-        </label>
-        {status ? <p className="rounded-2xl bg-[#fff7ec] p-3 text-sm">{status}</p> : null}
+
+        {status ? (
+          <p role="status" className="rounded-2xl bg-[#fff7ec] p-3 text-sm">
+            {status}
+          </p>
+        ) : null}
+
         <button className="btn-primary w-full" disabled={loading}>
-          {loading ? "جاري التحقق..." : "تحقق بالذكاء الاصطناعي وادخل"}
+          {loading ? "جاري التسجيل..." : "متابعة إلى قائمة الطعام"}
         </button>
       </form>
     </div>

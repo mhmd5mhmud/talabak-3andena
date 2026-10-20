@@ -55,12 +55,12 @@ export default function RegisterPage() {
 
     try {
       setUser({
-        fullName: name,
-        address: deliveryAddress,
-        geo: geo || undefined,
-        verified: false,
-        verifiedAt: undefined,
-      });
+  fullName: name,
+  address: deliveryAddress,
+  geo: geo || { lat: 0, lng: 0, accuracy: 0 },
+  verified: false,
+  verifiedAt: undefined,
+});
 
       router.push("/");
     } catch {

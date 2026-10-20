@@ -1,0 +1,43 @@
+import type { SandwichLayer } from "@/types";
+
+export const SANDWICH_LAYERS: SandwichLayer[] = [
+  { id: "bread-white", name: "خبز أبيض", emoji: "🍞", color: "#F3E0C2", category: "bread" },
+  { id: "bread-brown", name: "خبز أسمر", emoji: "🥖", color: "#C9A66B", category: "bread" },
+  { id: "bread-ciabatta", name: "تشاباتا", emoji: "🫓", color: "#E8D5B5", category: "bread" },
+  { id: "chicken", name: "دجاج مشوي", emoji: "🍗", color: "#D4A373", category: "protein" },
+  { id: "beef", name: "لحم مشوي", emoji: "🥩", color: "#8C3A2B", category: "protein" },
+  { id: "falafel", name: "فلافل", emoji: "🧆", color: "#C4A35A", category: "protein" },
+  { id: "tuna", name: "تونة", emoji: "🐟", color: "#7BA7C9", category: "protein" },
+  { id: "egg", name: "بيض", emoji: "🥚", color: "#F4E1A1", category: "protein" },
+  { id: "lettuce", name: "خس", emoji: "🥬", color: "#8FCB6A", category: "veg" },
+  { id: "tomato", name: "طماطم", emoji: "🍅", color: "#E05A4F", category: "veg" },
+  { id: "cucumber", name: "خيار", emoji: "🥒", color: "#6FBF73", category: "veg" },
+  { id: "onion", name: "بصل", emoji: "🧅", color: "#D9B8D9", category: "veg" },
+  { id: "pickle", name: "مخلل", emoji: "🥒", color: "#C7D36F", category: "veg" },
+  { id: "mayo", name: "مايونيز", emoji: "🤍", color: "#F7F1E3", category: "sauce" },
+  { id: "ketchup", name: "كاتشب", emoji: "❤️", color: "#C0392B", category: "sauce" },
+  { id: "tahini", name: "طحينة", emoji: "🟤", color: "#E6D3A3", category: "sauce" },
+  { id: "hot", name: "شطة", emoji: "🌶️", color: "#B22222", category: "sauce" },
+  { id: "cheese", name: "جبنة", emoji: "🧀", color: "#F2C94C", category: "extra" },
+  { id: "fries", name: "بطاطس", emoji: "🍟", color: "#E2B657", category: "extra" },
+  { id: "chocolate", name: "شوكولاتة", emoji: "🍫", color: "#5D3A1A", category: "extra" },
+  { id: "peanut", name: "زبدة فول سوداني", emoji: "🥜", color: "#C68642", category: "extra" },
+  { id: "icecream", name: "آيس كريم", emoji: "🍦", color: "#FFF6E5", category: "extra" },
+  { id: "garlic", name: "ثوم كثيف", emoji: "🧄", color: "#EFE7D3", category: "extra" },
+  { id: "jam", name: "مربى", emoji: "🍓", color: "#C23B4A", category: "extra" },
+];
+
+export const BAD_COMBOS: [string, string, string][] = [
+  ["tuna", "chocolate", "التونة مع الشوكولاتة تفسد الطعم تماماً"],
+  ["tuna", "peanut", "خلط السمك مع زبدة الفول خطر على الحساسية والطعم"],
+  ["tuna", "jam", "المربى الحلو مع التونة مزيج كارثي"],
+  ["icecream", "garlic", "الآيس كريم مع الثوم ضار للمعدة وفظيع المذاق"],
+  ["icecream", "hot", "الآيس كريم مع الشطة يربك الجهاز الهضمي"],
+  ["icecream", "ketchup", "الكاتشب مع الآيس كريم لا يصلح كسندويتش"],
+  ["icecream", "tuna", "منتجات بحرية باردة حلوة ليست وجبة آمنة"],
+  ["chocolate", "garlic", "الثوم والشوكولاتة مزيج يفسد الشهية"],
+  ["chocolate", "hot", "الشوكولاتة الحارة جداً قد تهيج المعدة"],
+  ["peanut", "hot", "زبدة الفول مع شطة مركزة قد تسبب تهيجاً شديداً"],
+  ["jam", "tuna", "الحلو والمالح البحري لا يجتمعان هنا"],
+  ["jam", "garlic", "المربى مع الثوم الكثيف طعم كارثي"],
+];

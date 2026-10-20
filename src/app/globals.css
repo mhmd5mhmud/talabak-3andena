@@ -1,0 +1,89 @@
+@import "tailwindcss";
+
+:root {
+  --cream: #fbf4ea;
+  --cream-2: #f3e6d4;
+  --ink: #3d2b1f;
+  --muted: #7a6554;
+  --gold: #c9a227;
+  --rose: #c45c4a;
+  --deep: #2b1c14;
+}
+
+html,
+body {
+  min-height: 100%;
+}
+
+body {
+  background: radial-gradient(1200px 600px at 10% -10%, #fff7ec 0%, var(--cream) 45%, #f0e0cc 100%);
+  color: var(--ink);
+}
+
+.font-display {
+  font-family: var(--font-amiri), serif;
+}
+
+.font-body {
+  font-family: var(--font-cairo), sans-serif;
+}
+
+.gold-line {
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  height: 1px;
+}
+
+.btn-primary {
+  @apply inline-flex items-center justify-center rounded-full bg-[#c45c4a] px-5 py-2.5 text-sm font-semibold text-white shadow-md transition hover:bg-[#a94636] disabled:opacity-50;
+}
+
+.btn-ghost {
+  @apply inline-flex items-center justify-center rounded-full border border-[#c9a227]/50 bg-white/60 px-4 py-2 text-sm text-[#3d2b1f] backdrop-blur hover:bg-white;
+}
+
+.card {
+  @apply rounded-3xl border border-[#e8d5b8] bg-white/75 shadow-[0_12px_40px_rgba(61,43,31,0.08)] backdrop-blur;
+}
+
+.theme-egyptian {
+  background:
+    radial-gradient(circle at 20% 0%, rgba(201, 162, 39, 0.18), transparent 40%),
+    repeating-linear-gradient(45deg, rgba(201, 162, 39, 0.07) 0 8px, transparent 8px 16px),
+    #f7ecd8;
+}
+.theme-syrian {
+  background:
+    radial-gradient(circle at 80% 10%, rgba(139, 30, 63, 0.16), transparent 38%),
+    linear-gradient(180deg, #f8ece8, #f4e3d6);
+}
+.theme-italian {
+  background:
+    radial-gradient(circle at 10% 80%, rgba(184, 87, 42, 0.16), transparent 40%),
+    linear-gradient(180deg, #f8efe6, #efe2d2);
+}
+.theme-saudi {
+  background:
+    radial-gradient(circle at 50% 0%, rgba(196, 163, 90, 0.25), transparent 42%),
+    linear-gradient(180deg, #f6ead2, #ead7b4);
+}
+.theme-american {
+  background:
+    radial-gradient(circle at 0% 0%, rgba(192, 57, 43, 0.12), transparent 35%),
+    radial-gradient(circle at 100% 0%, rgba(41, 128, 185, 0.12), transparent 35%),
+    #f7efe6;
+}
+
+.arabesque {
+  background-image:
+    radial-gradient(circle at 50% 50%, transparent 38%, rgba(201, 162, 39, 0.18) 39%, transparent 40%),
+    repeating-linear-gradient(60deg, rgba(201, 162, 39, 0.08) 0 2px, transparent 2px 14px);
+}
+
+.roman-col {
+  box-shadow: inset 0 0 0 1px rgba(184, 87, 42, 0.25);
+  background-image: linear-gradient(90deg, rgba(255, 255, 255, 0.4) 0 8%, transparent 8%);
+}
+
+.neon-diner {
+  text-shadow: 0 0 12px rgba(192, 57, 43, 0.35);
+}

@@ -42,9 +42,9 @@ export type GeoPoint = {
 export type UserProfile = {
   fullName: string;
   address: string;
-  geo: GeoPoint;
+  geo?: GeoPoint;
   verified: boolean;
-  verifiedAt: string;
+  verifiedAt?: string;
 };
 
 export type Order = {

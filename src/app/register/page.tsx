@@ -53,14 +53,13 @@ export default function RegisterPage() {
     setLoading(true);
     setStatus("");
 
-    try {
+       try {
       setUser({
-  fullName: name,
-  address: deliveryAddress,
-  geo: geo || { lat: 0, lng: 0, accuracy: 0 },
-  verified: false,
-  verifiedAt: undefined,
-});
+        fullName: name,
+        address: deliveryAddress,
+        ...(geo ? { geo } : {}),
+        verified: false,
+      });
 
       router.push("/");
     } catch {

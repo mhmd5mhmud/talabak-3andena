@@ -14,31 +14,70 @@ export default function CartPage() {
   const delivery = cart.length ? 25 : 0;
   const total = subtotal + delivery;
 
+ 
   async function checkout() {
     if (!user || !cart.length) return;
+
+    if (!user.geo) {
+      router.push("/register");
+      return;
+    }
+
     setBusy(true);
-    const cuisineId = (cart[0].cuisineId || "egyptian") as CuisineId | "sandwich";
-    const etaRes = await fetch("/api/ai/eta", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ cuisineId, geo: user.geo }),
-    });
-    const eta = await etaRes.json();
-    const order = {
-      id: crypto.randomUUID(),
-      items: cart,
-      subtotal,
-      delivery,
-      total,
-      createdAt: new Date().toISOString(),
-      etaSeconds: eta.etaSeconds,
-      kitchen: eta.kitchen,
-      destination: user.geo,
-      distanceKm: eta.distanceKm,
-    };
-    placeOrder(order);
-    clearCart();
-    router.push(`/track/${order.id}`);
+
+    try {
+      const cuisineId = (cart[0].cuisineId || "egyptian") as CuisineId | "sandwich";
+
+      const etaRes = await fetch("/api/ai/eta", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          cuisineId,
+          geo: user.geo,
+        }),
+      });
+
+      if (!etaRes.ok) {
+        throw new Error("تعذر حساب وقت التوصيل.");
+      }
+
+      const eta = await etaRes.json();
+
+      if (
+        !Number.isFinite(user.geo.lat) ||
+        !Number.isFinite(user.geo.lng) ||
+        !Number.isFinite(eta.etaSeconds) ||
+        !eta.kitchen ||
+        !Number.isFinite(eta.distanceKm)
+      ) {
+        throw new Error("بيانات التوصيل غير مكتملة. حاول تحديد موقعك مرة أخرى.");
+      }
+
+      const order = {
+        id: crypto.randomUUID(),
+        items: cart,
+        subtotal,
+        delivery,
+        total,
+        createdAt: new Date().toISOString(),
+        etaSeconds: eta.etaSeconds,
+        kitchen: eta.kitchen,
+        destination: user.geo,
+        distanceKm: eta.distanceKm,
+      };
+
+      placeOrder(order);
+      clearCart();
+      router.push(`/track/${order.id}`);
+    } catch (error) {
+      alert(
+        error instanceof Error
+          ? error.message
+          : "حصل خطأ أثناء تأكيد الطلب. حاول مرة أخرى."
+      );
+    } finally {
+      setBusy(false);
+    }
   }
 
   return (
